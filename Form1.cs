@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace Calculator
 {
@@ -13,7 +14,8 @@ namespace Calculator
         private float Number1 = 0;
         private float Number2 = 0;
         private string Operation = "";
-        private bool FirstNumber = true;
+        private bool IsFirstNumber = true;
+        private bool IsAfterTheComma = false;
 
         private float CalculationResult(string Operation, float Number1, float Number2)
         {
@@ -48,46 +50,98 @@ namespace Calculator
             return Result;
         }
 
-        private void btnClear_Click(object sender, System.EventArgs e)
+        private void Reset()
         {
+            lblResult.Text = "0";
             txtOperation.Clear();
+            Number1 = 0;
+            Number2 = 0;
+            Result = 0;
+            Operation = "";
+            IsFirstNumber = true;
+            IsAfterTheComma = false;
         }
 
-        private void txtOperation_TextChanged(object sender, System.EventArgs e)
+        private void btnClear_Click(object sender, System.EventArgs e)
         {
-            Operation = ((Button)sender).Tag.ToString();
-
-            Result = CalculationResult(Operation, Number1, Number2);
+            Reset();
         }
 
         private void Numberbtn_Click(object sender, System.EventArgs e)
         {
-            txtOperation.Text += ((Button)sender).Tag.ToString();
+            txtOperation.Text += ((Button)sender).Text;
 
-            if (FirstNumber)
+            if (IsFirstNumber && !IsAfterTheComma)
             {
-                Number1 += ((float)((Button)sender).Tag) * 10;
+                Number1 = Number1 * 10 + Convert.ToSingle(((Button)sender).Text);
+            }
+
+            else if (IsFirstNumber && IsAfterTheComma)
+            {
+                Number1 = Number1 + (Convert.ToSingle(((Button)sender).Text) / 10);
+            }
+
+            else if (!IsFirstNumber && IsAfterTheComma)
+            {
+                Number2 = Number2 + (Convert.ToSingle(((Button)sender).Text) / 10);
             }
 
             else
             {
-                Number2 = ((float)((Button)sender).Tag) * 10;
+                Number2 = Number2 * 10 + Convert.ToSingle(((Button)sender).Text);
             }
-
         }
 
         private void Operationbtn_Click(object sender, System.EventArgs e)
         {
-            txtOperation.Text += ((Button)sender).Tag.ToString();
+            if (IsFirstNumber
+                && !string.IsNullOrWhiteSpace(txtOperation.Text)
+                && !(txtOperation.Text.Contains("+")
+                || txtOperation.Text.Contains("-")
+                || txtOperation.Text.Contains("/")
+                || txtOperation.Text.Contains("x")
+                || txtOperation.Text.Contains("%")))
+            {
+                txtOperation.Text += ((Button)sender).Text;
 
-            FirstNumber = false;
-            Operation = ((Button)sender).Tag.ToString();
+                IsFirstNumber = false;
+                Operation = ((Button)sender).Text;
+                IsAfterTheComma = false;
+
+            }
+
+            else if (IsAfterTheComma)
+            {
+                IsAfterTheComma = false;
+            }
+
+            else
+            {
+                IsAfterTheComma = false;
+                return;
+            }
 
         }
 
         private void btnEqual_Click(object sender, System.EventArgs e)
         {
+            Result = CalculationResult(Operation, Number1, Number2);
             lblResult.Text = Result.ToString();
+        }
+
+        private void Commabtn_Click(object sender, EventArgs e)
+        {
+            if (IsFirstNumber
+                && !string.IsNullOrWhiteSpace(txtOperation.Text)
+                && !(txtOperation.Text.Contains("+")
+                || txtOperation.Text.Contains("-")
+                || txtOperation.Text.Contains("/")
+                || txtOperation.Text.Contains("x")
+                || txtOperation.Text.Contains("%")))
+            {
+                txtOperation.Text += btnComma.Text;
+                IsAfterTheComma = true;
+            }
         }
     }
 }
