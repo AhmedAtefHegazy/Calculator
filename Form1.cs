@@ -16,6 +16,8 @@ namespace Calculator
         private string Operation = "";
         private bool IsFirstNumber = true;
         private bool IsAfterTheComma = false;
+        private byte FOrderAfterComma = 1;
+        private byte LOrderAfterComma = 1;
 
         private float CalculationResult(string Operation, float Number1, float Number2)
         {
@@ -62,6 +64,81 @@ namespace Calculator
             IsAfterTheComma = false;
         }
 
+        private void NumberHandiling(Button Numberbutton)
+        {
+            txtOperation.Text += Numberbutton.Text;
+
+            if (IsFirstNumber && !IsAfterTheComma)
+            {
+                Number1 = Number1 * 10 + Convert.ToSingle(Numberbutton.Text);
+            }
+
+            else if (IsFirstNumber && IsAfterTheComma)
+            {
+                FOrderAfterComma *= 10;
+                Number1 += (Convert.ToSingle(Numberbutton.Text) / (FOrderAfterComma));
+            }
+
+            else if (!IsFirstNumber && IsAfterTheComma)
+            {
+                LOrderAfterComma *= 10;
+                Number2 += (Convert.ToSingle(Numberbutton.Text) / (LOrderAfterComma));
+            }
+
+            else if (!IsFirstNumber && !IsAfterTheComma)
+            {
+                Number2 = Number2 * 10 + Convert.ToSingle(Numberbutton.Text);
+            }
+        }
+
+        private void SympolsHandiling(Button Sympolbutton)
+        {
+            if (Sympolbutton.Text == ",")
+            {
+                if (IsFirstNumber
+               && !string.IsNullOrWhiteSpace(txtOperation.Text)
+               && !(txtOperation.Text.Contains("+")
+               || txtOperation.Text.Contains("-")
+               || txtOperation.Text.Contains("/")
+               || txtOperation.Text.Contains("x")
+               || txtOperation.Text.Contains("%")))
+                {
+                    txtOperation.Text += btnComma.Text;
+                    IsAfterTheComma = true;
+                }
+            }
+
+            else
+            {
+                if (IsFirstNumber
+               && !string.IsNullOrWhiteSpace(txtOperation.Text)
+               && !(txtOperation.Text.Contains("+")
+               || txtOperation.Text.Contains("-")
+               || txtOperation.Text.Contains("/")
+               || txtOperation.Text.Contains("x")
+               || txtOperation.Text.Contains("%")))
+                {
+                    txtOperation.Text += Sympolbutton.Text;
+
+                    IsFirstNumber = false;
+                    Operation = Sympolbutton.Text;
+                    IsAfterTheComma = false;
+
+                }
+
+                else if (IsAfterTheComma)
+                {
+                    IsAfterTheComma = false;
+                }
+
+                else
+                {
+                    IsAfterTheComma = false;
+                    return;
+                }
+            }
+        }
+
         private void btnClear_Click(object sender, System.EventArgs e)
         {
             Reset();
@@ -69,57 +146,12 @@ namespace Calculator
 
         private void Numberbtn_Click(object sender, System.EventArgs e)
         {
-            txtOperation.Text += ((Button)sender).Text;
-
-            if (IsFirstNumber && !IsAfterTheComma)
-            {
-                Number1 = Number1 * 10 + Convert.ToSingle(((Button)sender).Text);
-            }
-
-            else if (IsFirstNumber && IsAfterTheComma)
-            {
-                Number1 = Number1 + (Convert.ToSingle(((Button)sender).Text) / 10);
-            }
-
-            else if (!IsFirstNumber && IsAfterTheComma)
-            {
-                Number2 = Number2 + (Convert.ToSingle(((Button)sender).Text) / 10);
-            }
-
-            else
-            {
-                Number2 = Number2 * 10 + Convert.ToSingle(((Button)sender).Text);
-            }
+            NumberHandiling((Button)sender);
         }
 
         private void Operationbtn_Click(object sender, System.EventArgs e)
         {
-            if (IsFirstNumber
-                && !string.IsNullOrWhiteSpace(txtOperation.Text)
-                && !(txtOperation.Text.Contains("+")
-                || txtOperation.Text.Contains("-")
-                || txtOperation.Text.Contains("/")
-                || txtOperation.Text.Contains("x")
-                || txtOperation.Text.Contains("%")))
-            {
-                txtOperation.Text += ((Button)sender).Text;
-
-                IsFirstNumber = false;
-                Operation = ((Button)sender).Text;
-                IsAfterTheComma = false;
-
-            }
-
-            else if (IsAfterTheComma)
-            {
-                IsAfterTheComma = false;
-            }
-
-            else
-            {
-                IsAfterTheComma = false;
-                return;
-            }
+            SympolsHandiling((Button)sender);
 
         }
 
@@ -131,17 +163,7 @@ namespace Calculator
 
         private void Commabtn_Click(object sender, EventArgs e)
         {
-            if (IsFirstNumber
-                && !string.IsNullOrWhiteSpace(txtOperation.Text)
-                && !(txtOperation.Text.Contains("+")
-                || txtOperation.Text.Contains("-")
-                || txtOperation.Text.Contains("/")
-                || txtOperation.Text.Contains("x")
-                || txtOperation.Text.Contains("%")))
-            {
-                txtOperation.Text += btnComma.Text;
-                IsAfterTheComma = true;
-            }
+            SympolsHandiling((Button)sender);
         }
     }
 }
