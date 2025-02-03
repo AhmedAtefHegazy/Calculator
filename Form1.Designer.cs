@@ -39,7 +39,6 @@
             this.btn8 = new System.Windows.Forms.Button();
             this.btn9 = new System.Windows.Forms.Button();
             this.btnZero = new System.Windows.Forms.Button();
-            this.btnComma = new System.Windows.Forms.Button();
             this.btnEqual = new System.Windows.Forms.Button();
             this.btnPlus = new System.Windows.Forms.Button();
             this.btnMinus = new System.Windows.Forms.Button();
@@ -203,29 +202,13 @@
             this.btnZero.ForeColor = System.Drawing.Color.White;
             this.btnZero.Location = new System.Drawing.Point(10, 485);
             this.btnZero.Name = "btnZero";
-            this.btnZero.Size = new System.Drawing.Size(168, 85);
+            this.btnZero.Size = new System.Drawing.Size(255, 85);
             this.btnZero.TabIndex = 9;
             this.btnZero.TabStop = false;
             this.btnZero.Tag = "0";
             this.btnZero.Text = "0";
             this.btnZero.UseVisualStyleBackColor = false;
             this.btnZero.Click += new System.EventHandler(this.Numberbtn_Click);
-            // 
-            // btnComma
-            // 
-            this.btnComma.BackColor = System.Drawing.Color.Gray;
-            this.btnComma.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnComma.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnComma.ForeColor = System.Drawing.Color.White;
-            this.btnComma.Location = new System.Drawing.Point(184, 485);
-            this.btnComma.Name = "btnComma";
-            this.btnComma.Size = new System.Drawing.Size(81, 85);
-            this.btnComma.TabIndex = 10;
-            this.btnComma.TabStop = false;
-            this.btnComma.Tag = ",";
-            this.btnComma.Text = ",";
-            this.btnComma.UseVisualStyleBackColor = false;
-            this.btnComma.Click += new System.EventHandler(this.Commabtn_Click);
             // 
             // btnEqual
             // 
@@ -377,7 +360,6 @@
             this.Controls.Add(this.btnMinus);
             this.Controls.Add(this.btnPlus);
             this.Controls.Add(this.btnEqual);
-            this.Controls.Add(this.btnComma);
             this.Controls.Add(this.btnZero);
             this.Controls.Add(this.btn9);
             this.Controls.Add(this.btn8);
@@ -412,7 +394,6 @@
         private System.Windows.Forms.Button btn8;
         private System.Windows.Forms.Button btn9;
         private System.Windows.Forms.Button btnZero;
-        private System.Windows.Forms.Button btnComma;
         private System.Windows.Forms.Button btnEqual;
         private System.Windows.Forms.Button btnPlus;
         private System.Windows.Forms.Button btnMinus;
