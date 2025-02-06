@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Windows.Forms;
 
 namespace Calculator
@@ -10,93 +11,16 @@ namespace Calculator
             InitializeComponent();
         }
 
-        private string Operation = "";
-        private float Result = 0;
-        private float Number1 = 0;
-        private float Number2 = 0;
+        private String Result = "0";
         private bool IsFirstNumber = true;
-
-        private float CalculationResult(string Operation, float Number1, float Number2)
-        {
-            float Result = 0;
-
-            switch (Operation)
-            {
-                case "+":
-                    Result = Number1 + Number2;
-                    break;
-
-                case "-":
-                    Result = Number1 - Number2;
-                    break;
-
-                case "x":
-                    Result = Number1 * Number2;
-                    break;
-
-                case "/":
-                    Result = Number1 / Number2;
-                    break;
-
-                case "%":
-                    Result = Number1 % Number2;
-                    break;
-
-                default:
-                    break;
-            }
-
-            return Result;
-        }
 
         private void Reset()
         {
             lblResult.Text = "0";
             txtOperation.Clear();
-            Number1 = 0;
-            Number2 = 0;
-            Result = 0;
-            Operation = "";
+
+            Result = "0";
             IsFirstNumber = true;
-        }
-
-        private void NumberHandiling(Button Numberbutton)
-        {
-            txtOperation.Text += Numberbutton.Text;
-
-            if (IsFirstNumber)
-            {
-                Number1 = Number1 * 10 + Convert.ToSingle(Numberbutton.Text);
-            }
-
-            else if (!IsFirstNumber)
-            {
-                Number2 = Number2 * 10 + Convert.ToSingle(Numberbutton.Text);
-            }
-
-        }
-
-        private void SympolsHandiling(Button Sympolbutton)
-        {
-            if (IsFirstNumber
-           && !string.IsNullOrWhiteSpace(txtOperation.Text)
-           && !(txtOperation.Text.Contains("+")
-           || txtOperation.Text.Contains("-")
-           || txtOperation.Text.Contains("/")
-           || txtOperation.Text.Contains("x")
-           || txtOperation.Text.Contains("%")))
-            {
-                txtOperation.Text += Sympolbutton.Text;
-
-                IsFirstNumber = false;
-                Operation = Sympolbutton.Text;
-
-            }
-
-            else
-            {
-                return;
-            }
         }
 
         private void btnClear_Click(object sender, System.EventArgs e)
@@ -106,20 +30,39 @@ namespace Calculator
 
         private void Numberbtn_Click(object sender, System.EventArgs e)
         {
-            NumberHandiling((Button)sender);
+            txtOperation.Text += ((Button)sender).Text;
         }
 
         private void Operationbtn_Click(object sender, System.EventArgs e)
         {
-            SympolsHandiling((Button)sender);
-
+            txtOperation.Text += ((Button)sender).Text;
         }
 
         private void btnEqual_Click(object sender, System.EventArgs e)
         {
-            Result = CalculationResult(Operation, Number1, Number2);
+            DataTable table = new DataTable();
 
-            lblResult.Text = Result.ToString();
+            string Equation = "";
+
+            Equation = txtOperation.Text.Replace("x", "*");
+
+
+            try
+            {
+                Result = Convert.ToString(table.Compute(Equation, ""));
+                lblResult.Text = Result;
+
+            }
+            catch (Exception)
+            {
+                lblResult.Text = "Syntax Error";
+            }
+
+        }
+
+        private void btnBackSpace_Click(object sender, EventArgs e)
+        {
+            txtOperation.Text = txtOperation.Text.Substring(0, txtOperation.Text.Length - 1);
         }
     }
 }
